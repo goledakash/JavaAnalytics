@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:t="http://myfaces.apache.org/tomahawk"
+      xmlns:f="http://java.sun.com/jsf/core"
+      >
+    <h:head>
+    <!--  	<h:outputStylesheet library="css" name="table-style.css"  />-->
+    </h:head>
+    <h:body>
+
+<h:form>
+
+Error : ${databaseAccessBean.databaseConnectionBean.output}
+	<h:panelGrid columns="5">
+			
+			<h:commandButton type="submit" value="LIST THE TABLE" action="#{databaseAccessBean.DisplayTableList}" />
+			<h:commandButton type="submit" value="DISPLAY THE TABLE" action="#{databaseAccessBean.DisplayTableName}" />
+			<h:commandButton type="submit" value="DISPLAY COLUMNS OF TABLES" action="#{databaseAccessBean.DisplayColumnList}" />
+			<h:commandButton type="submit" value="DISPLAY SELECTED COLUMNS" action="#{databaseAccessBean.DisplaySelColumn}" />
+			 <h:commandButton type="submit" value="DISPLAY DESCRIPTIVE STATS" action="#{databaseAccessBean.DisplayDescriptiveStats}" />
+		   
+			
+
+	</h:panelGrid>
+	<h:panelGrid columns="5">
+	
+	<h:panelGrid columns="1">
+	DATABASE SCHEMA
+	 <h:selectOneMenu value="#{databaseAccessBean.selected_schema}"  >
+           <f:selectItem itemValue="#{databaseAccessBean.databaseConnectionBean.dbSchema}" itemLabel="#{databaseAccessBean.databaseConnectionBean.dbSchema}" />
+        <f:selectItem itemValue="{databaseAccessBean.databaseConnectionBean.dbSchema2}" itemLabel="#{databaseAccessBean.databaseConnectionBean.dbSchema2}" />
+   	
+      </h:selectOneMenu>
+	</h:panelGrid>
+	
+	
+	<h:panelGrid columns="1">
+	TABLE LIST
+	<h:selectOneListbox id="table_list" value="#{databaseAccessBean.selectedTable}" rendered="true" >
+	<f:selectItems value="#{databaseAccessBean.tableList}"  />
+    </h:selectOneListbox>
+	</h:panelGrid>
+	
+	<h:panelGrid columns="1">
+	COLUMN LIST
+	
+	<h:selectManyListbox id="column_list" value="#{databaseAccessBean.selectedColumns}" rendered="true">
+	<f:selectItems value="#{databaseAccessBean.columnList}"   />
+    </h:selectManyListbox>
+    </h:panelGrid>
+    
+<h:panelGrid border="1" columns="8" rendered="true">
+<h:outputText style="font-weight:bold">Minimum</h:outputText>
+<h:outputText style="font-weight:bold">Maximum</h:outputText>
+<h:outputText style="font-weight:bold">Mean</h:outputText>
+<h:outputText style="font-weight:bold">Variance</h:outputText>
+<h:outputText style="font-weight:bold">Std</h:outputText>
+<h:outputText style="font-weight:bold">Median</h:outputText>
+<h:outputText style="font-weight:bold">percentile1</h:outputText>
+<h:outputText style="font-weight:bold">percentile2</h:outputText>
+<h:outputText value="#{databaseAccessBean.minValue}"/>
+<h:outputText value="#{databaseAccessBean.maxValue}"/>
+<h:outputText value="#{databaseAccessBean.mean}"/>
+<h:outputText value="#{databaseAccessBean.variance}"/>
+<h:outputText value="#{databaseAccessBean.std}"/>
+<h:outputText value="#{databaseAccessBean.median}"/>
+<h:outputText value="#{databaseAccessBean.q1}"/>
+<h:outputText value="#{databaseAccessBean.q3}"/>
+</h:panelGrid>
+
+	<h:panelGrid columns="1">
+        <h:commandButton type="submit" value="EXPORT CSV"
+					action="#{databaseAccessBean.Export}" />
+   </h:panelGrid> 
+   
+          <h:commandButton type="submit" value="STATISTICS"
+					action="statistics" />
+ <p align="right">
+        <h:commandButton type="submit" value="LOGOUT"
+					action="credentials" />
+    </p>
+
+</h:panelGrid>
+
+
+</h:form>    	
+ <hr />
+    	
+<hr />
+
+<hr />
+    	<table id="tblSqlResult" border="1" >
+    <thead>
+        <tr >
+       	<!-- sql.headers is a List of Strings -->
+            <ui:repeat value="#{databaseAccessBean.outputColumnList}" var="h" >
+                <th>#{h}</th>
+            </ui:repeat>
+        </tr>
+    </thead>
+    <tbody>
+    <ui:repeat value="#{databaseAccessBean.output_table}" var="row">
+            <tr>
+                <ui:repeat value="#{row}" var="cell">
+                    <td>#{cell}</td>
+                </ui:repeat>
+            </tr>
+        </ui:repeat>
+        
+    </tbody>
+</table>
+    </h:body>
+</html>

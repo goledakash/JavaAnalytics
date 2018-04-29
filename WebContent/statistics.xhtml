@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:c="http://java.sun.com/jsp/jstl/core"
+      xmlns:t="http://myfaces.apache.org/tomahawk"
+      xmlns:f="http://java.sun.com/jsf/core">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Insert title here</title>
+</head>
+<body>
+
+    <center>
+				<h4>GRAPHICAL DISPLAY S16G20</h4>
+			
+				
+				<br />
+			</center>
+
+
+<h:form>
+		Error : ${databaseAccessBean.databaseConnectionBean.output}
+			<center>
+			<h:commandLink value="DISPLAY TABLES"  action="#{databaseAccessBean.DisplayTableList}" style="padding-right:10px" />
+			&nbsp;&nbsp;&nbsp;
+	
+	<h:commandLink type="submit" value=" DISPLAY COLUMNS " action="#{databaseAccessBean.DisplayColumnList}" style="padding-right:10px" />
+			<h:commandLink type="submit" value=" GENERATE GRAPH " action="#{databaseAccessBean.displayCharts}" style="padding-right:10px" />
+		
+			<br />
+	
+			<h:commandLink type="submit" value="BACK" action="operationDatabase.xhtml" style="padding-right:10px" />
+			
+			</center>
+<hr />			
+
+	
+	<table>
+	<tr>
+	<td valign="top">
+	<b>SCHEMAS </b><br /><br />
+	 <h:selectOneMenu value="#{databaseAccessBean.selected_schema}"  >
+        <f:selectItem itemValue="#{databaseAccessBean.databaseConnectionBean.dbSchema}" itemLabel="#{databaseAccessBean.databaseConnectionBean.dbSchema}" />
+        <f:selectItem itemValue="{databaseAccessBean.databaseConnectionBean.dbSchema2}" itemLabel="#{databaseAccessBean.databaseConnectionBean.dbSchema2}" />
+      	
+      </h:selectOneMenu>
+	
+	</td>
+		<td valign="top">
+
+	<b> TABLES</b>
+	<br /><br />
+	<h:selectOneListbox id="table_list" value="#{databaseAccessBean.selectedTable}" rendered="true" >
+	<f:selectItems value="#{databaseAccessBean.tableList}"  />
+    </h:selectOneListbox>
+	
+	</td>
+		<td valign="top">
+
+	
+	<c:if test="#{databaseAccessBean.columnListRendered == true}" >
+	
+<b>	COLUMNS</b><br /><br />
+	</c:if>
+	
+	<h:selectManyListbox id="column_list" value="#{databaseAccessBean.selectedColumns}" rendered="#{databaseAccessBean.columnListRendered}">
+	<f:selectItems value="#{databaseAccessBean.columnList}"   />
+    </h:selectManyListbox>
+    
+	</td>
+		<td valign="top">
+	
+	 <c:if test="#{databaseAccessBean.columnListRendered == true}" >
+	
+   		
+    	</c:if>
+    
+	</td>
+	
+	</tr></table>
+	
+</h:form>
+
+<hr />
+
+<hr />
+
+<c:if test="${databaseAccessBean.graph_flag == true}" >
+<img alt="Chart" src='../temp/#{databaseAccessBean.graph_name}'></img>
+            </c:if>
+
+
+
+
+
+<c:if test="#{databaseAccessBean.value == 1}" >
+
+    <table id="tblSqlResult" border="4" >
+    
+    <thead>
+    
+        <tr >
+       	
+       	<td>
+       	<h:outputLabel>COL COUNT</h:outputLabel>
+       	</td>
+       	<td>
+       	<h:outputLabel>ROW COUNT</h:outputLabel>
+       	</td>
+       	      
+        </tr> 
+    </thead> 
+    <tbody>
+    <tr >
+       	
+       	<td>
+       	
+       	<h:outputText value="#{databaseAccessBean.colCount}"></h:outputText>
+       	</td>
+       	<td>
+       	<h:outputText value="#{databaseAccessBean.rowCount}"></h:outputText>
+       	</td>
+       	      
+        </tr>
+    
+    </tbody>
+</table>
+
+</c:if>
+
+	<br />	<br />
+
+    <table id="tblSqlResult" border="2" >
+    
+    <thead>
+    
+        <tr >
+       	<!-- sql.headers is a List of Strings -->
+       	<c:if test="#{databaseAccessBean.value == 1}" >
+       	<ui:repeat value="#{databaseAccessBean.outputColumnList}" var="h" >
+                <th>#{h}</th>
+            </ui:repeat>
+       	</c:if>
+          
+        
+            
+        </tr> 
+    </thead> 
+    <tbody>
+    <ui:repeat value="#{databaseAccessBean.output_table}" var="row">
+    
+            <tr>
+                <ui:repeat value="#{row}" var="cell">
+                
+                    <td>#{cell}</td>
+                </ui:repeat>
+            </tr>
+        </ui:repeat>
+    </tbody>
+</table>
+
+
+
+
+</body>
+</html>
